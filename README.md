@@ -1,5 +1,8 @@
 # Introduction
 This collection of python scripts can be used to analyze the New York City Street graph.
+Contains a script that can be used to generate an image of the street network graph:
+
+![New York street network](https://github.com/nagyf/newyork-street-graph/raw/master/doc/newyork.jpg "New York Street Network")
 
 ## Install
 
