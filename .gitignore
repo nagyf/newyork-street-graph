@@ -1,6 +1,6 @@
 env
 *.plt
-*.txt
+input/*.txt
 *.png
 *.kml
 .DS_Store
