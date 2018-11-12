@@ -1,7 +1,7 @@
 # Introduction
 This collection of python scripts can be used to analyze the New York City Street graph.
 
-## Install
+## Install
 
 ```
 1. Activate virtualenv
@@ -11,7 +11,7 @@ This collection of python scripts can be used to analyze the New York City Stree
 > pip install -r requirements.txt
 ```
 
-## Usage
+## Usage
 
 To transform the input data, run:
 ```
