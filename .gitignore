@@ -1,7 +1,9 @@
 env
 *.plt
 input/*.txt
+*_info.txt
 *.png
+*.tab
 *.kml
 .DS_Store
 .vscode
