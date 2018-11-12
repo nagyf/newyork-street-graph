@@ -1,0 +1,7 @@
+env
+*.plt
+*.txt
+*.png
+*.kml
+.DS_Store
+.vscode
