@@ -1,5 +1,7 @@
 import sys
+import os
 import snap
+from subprocess import call
 
 def main():
     if len(sys.argv) != 2:
@@ -18,20 +20,24 @@ def main():
     print('Diameter', snap.GetBfsFullDiam(graph, 10))
     print('Clustering coefficient', snap.GetClustCf(graph))
     print('Triangles', snap.GetTriangleCnt(graph))
+
+    # Plot everything in the plots directory
+    os.chdir(os.path.join(os.path.abspath(sys.path[0]), 'plots'))
+    saveDegreeDistribution(graph, 'deg_dist_ny.tab')
+    
+    Rnd = snap.TRnd()
+    erdosRenyi = snap.GenRndGnm(snap.PNGraph, graph.GetNodes(), graph.GetEdges(), True, Rnd)
+    saveDegreeDistribution(erdosRenyi, 'deg_dist_er.tab')
+
+    call(['gnuplot', 'deg_dist.plt'])
+
+def saveDegreeDistribution(graph, filename):
     degToCntV = snap.TIntPrV()
     snap.GetDegCnt(graph, degToCntV)
-
-    degreeDistribution = {}
-    for item in degToCntV:
-        degreeDistribution[item.GetVal1()] = float(item.GetVal2()) / float(graph.GetNodes())
-        print "%d nodes with degree %d with distribution %f" % (item.GetVal2(), item.GetVal1(), degreeDistribution[item.GetVal1()])
-
-    snap.PlotInDegDistr(graph, filenameWOExt, "New York City streets In Degree")
-    snap.PlotOutDegDistr(graph, filenameWOExt, "New York City streets Out Degree")
-    snap.PlotClustCf(graph, filenameWOExt, "New York City streets Clustering coefficient")
-    snap.PlotSccDistr(graph, filenameWOExt, "Strongly Connected Components distribution")
-    snap.PlotWccDistr(graph, filenameWOExt, "Weakly Connected Components distribution")
-    # snap.DrawGViz(graph, snap.gvlDot, filenameWOExt + ".png", "New York")
+    with open(filename, 'w') as f:
+        for item in degToCntV:
+            dist = float(item.GetVal2()) / float(graph.GetNodes())
+            f.write('%d\t%f\n' % (item.GetVal1(), dist))
 
 if __name__ == '__main__':
     main()

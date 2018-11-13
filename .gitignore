@@ -1,5 +1,4 @@
 env
-*.plt
 input/*.txt
 *_info.txt
 *.png
