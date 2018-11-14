@@ -1,7 +1,6 @@
 import sys
 import os
 import snap
-import threading
 import time
 from subprocess import call
 
@@ -19,35 +18,20 @@ def main():
     erdosRenyi = snap.GenRndGnm(snap.PNEANet, graph.GetNodes(), graph.GetEdges(), True, Rnd)
     snap.PrintInfo(erdosRenyi, "Erdos-Renyi", 'erdos_renyi_info.txt', False)
 
+    grid = snap.GenGrid(snap.PNEANet, 220, 250, False)
+    snap.PrintInfo(grid, "Grid", 'grid_info.txt', False)
+
     printGenericInformation(graph, 'New York street network')
     printGenericInformation(erdosRenyi, 'Erdos-Renyi random graph')
+    printGenericInformation(grid, 'Grid random graph')
 
     # Plot everything in the plots directory
     os.chdir(os.path.join(os.path.abspath(sys.path[0]), 'plots'))
     saveDegreeDistribution(graph, 'deg_dist_ny.tab')
     saveDegreeDistribution(erdosRenyi, 'deg_dist_er.tab')
+    saveDegreeDistribution(grid, 'deg_dist_gr.tab')
 
-    tNy = threading.Thread(target=testRobustness, args=(graph, 'robustness_ny_rand.tab', 100, True))
-    tEr = threading.Thread(target=testRobustness, args=(erdosRenyi, 'robustness_er_rand.tab', 100, True))
-    tNy.start()
-    tEr.start()
-
-    while True:
-        tNy.join(600)
-        tEr.join(600)
-        if not tNy.isAlive() and not tEr.isAlive():
-            break
-
-    tNy = threading.Thread(target=testRobustness, args=(graph, 'robustness_ny_max.tab', 10, False))
-    tEr = threading.Thread(target=testRobustness, args=(erdosRenyi, 'robustness_er_max.tab', 10, False))
-    tNy.start()
-    tEr.start()
-
-    while True:
-        tNy.join(600)
-        tEr.join(600)
-        if not tNy.isAlive() and not tEr.isAlive():
-            break
+    testRobustnessAll([graph, erdosRenyi, grid])
 
     call(['gnuplot', 'deg_dist.plt'])
     call(['gnuplot', 'robustness_rand.plt'])
@@ -70,6 +54,11 @@ def printGenericInformation(graph, name):
     print('Clustering coefficient', snap.GetClustCf(graph))
     print('Triangles', snap.GetTriangleCnt(graph))
     print('---------------------------------------')
+
+def testRobustnessAll(graphs):
+    for idx, graph in enumerate(graphs):
+        testRobustness(graph, 'robustness_%d_rand.tab' % idx, 100, True)
+        testRobustness(graph, 'robustness_%d_max.tab' % idx, 10, False)
 
 def testRobustness(graph, filename, times = 100, random = True):
     results = []

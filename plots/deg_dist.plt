@@ -11,4 +11,5 @@ set tics scale 1
 set terminal png font arial 10 size 1000,800
 set output 'deg_dist.png
 plot 	"deg_dist_ny.tab" using 1:2 title "" with linespoints pt 13 lw 2 lt rgb "salmon", \
-        "deg_dist_er.tab" using 1:2 title "" with linespoints pt 13 lw 2 lt rgb "dark-gray"
+        "deg_dist_er.tab" using 1:2 title "" with linespoints pt 13 lw 2 lt rgb "dark-gray", \
+        "deg_dist_gr.tab" using 1:2 title "" with linespoints pt 13 lw 2 lt rgb "black"
